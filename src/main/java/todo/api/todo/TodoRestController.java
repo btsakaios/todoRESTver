@@ -10,6 +10,7 @@ import org.dozer.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,13 +40,22 @@ public class TodoRestController {
         return todoResources;
     }
 
-    @RequestMapping(method = RequestMethod.POST) // (1)
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    @ResponseStatus(HttpStatus.CREATED) // (2)
-    public TodoResource postTodos(@RequestBody @Validated TodoResource todoResource) { // (3)
-        Todo createdTodo = todoService.create(beanMapper.map(todoResource, Todo.class)); // (4)
-        TodoResource createdTodoResponse = beanMapper.map(createdTodo, TodoResource.class); // (5)
-        return createdTodoResponse; // (6)
+    @ResponseStatus(HttpStatus.CREATED)
+    public TodoResource postTodos(@RequestBody @Validated TodoResource todoResource) {
+        Todo createdTodo = todoService.create(beanMapper.map(todoResource, Todo.class));
+        TodoResource createdTodoResponse = beanMapper.map(createdTodo, TodoResource.class);
+        return createdTodoResponse;
+    }
+
+    @RequestMapping(value="{todoId}", method = RequestMethod.GET) // (1)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public TodoResource getTodo(@PathVariable("todoId") String todoId) { // (2)
+        Todo todo = todoService.findOne(todoId); // (3)
+        TodoResource todoResource = beanMapper.map(todo, TodoResource.class);
+        return todoResource;
     }
 
 }
