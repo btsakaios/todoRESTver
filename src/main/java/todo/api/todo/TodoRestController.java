@@ -58,13 +58,20 @@ public class TodoRestController {
         return todoResource;
     }
 
-    @RequestMapping(value="{todoId}", method = RequestMethod.PUT) // (1)
+    @RequestMapping(value="{todoId}", method = RequestMethod.PUT)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    public TodoResource putTodo(@PathVariable("todoId") String todoId) { // (2)
-        Todo finishedTodo = todoService.finish(todoId); // (3)
+    public TodoResource putTodo(@PathVariable("todoId") String todoId) {
+        Todo finishedTodo = todoService.finish(todoId);
         TodoResource finishedTodoResource = beanMapper.map(finishedTodo, TodoResource.class);
         return finishedTodoResource;
+    }
+
+    @RequestMapping(value="{todoId}", method = RequestMethod.DELETE) // (1)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT) // (2)
+    public void deleteTodo(@PathVariable("todoId") String todoId) { // (3)
+        todoService.delete(todoId); // (4)
     }
 
 }
